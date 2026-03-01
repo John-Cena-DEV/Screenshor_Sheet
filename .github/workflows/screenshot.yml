@@ -1,7 +1,9 @@
-name: Google Sheet Screenshot
+name: Google Sheet Screenshot to Chat
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * *"   # optional: daily at 9 AM UTC
 
 jobs:
   capture:
@@ -10,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -25,4 +29,5 @@ jobs:
         env:
           SHEET_URL: ${{ secrets.SHEET_URL }}
           CHAT_WEBHOOK: ${{ secrets.CHAT_WEBHOOK }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: python screenshot.py
